@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "1c6a5671-c3b5-41e9-99c8-dfc84012cdee",
+		"name": "Writing Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12135093"
+	},
+	"item": [
+		{
+			"name": "Create User by pre-request script",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"    pm.environment.set(\"Full Name\", pm.variables.replaceIn('{{$randomFullName}}'));",
+							"    pm.environment.set(\"Job Title\", pm.variables.replaceIn('{{$randomJobTitle}}'));",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{Full Name}}\",\n    \"job\": \"{{Job Title}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate Create User Status by Tests",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"    pm.environment.set(\"Full Name\", pm.variables.replaceIn('{{$randomFullName}}'));",
+							"    pm.environment.set(\"Job Title\", pm.variables.replaceIn('{{$randomJobTitle}}'));",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{Full Name}}\",\n    \"job\": \"{{Job Title}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate User by Chaijs Assertion Library",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var resp = pm.response.json();",
+							"var names = pm.response.json().Results;",
+							"var count = pm.response.json().Count;",
+							"console.log(resp);",
+							"",
+							"",
+							"pm.test(\"Body Contains the String name\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"name\");",
+							"});",
+							"",
+							"pm.test(\"Result exists\", function () {",
+							"     pm.expect(resp.Results).to.exist;",
+							"});",
+							"",
+							"//to check the count is not null",
+							"pm.test(\"Count is not NULL\", function () {",
+							"     pm.expect(resp.Count).to.not.be.null;",
+							"});",
+							"",
+							"pm.test(\"Matching the subset of data\", function () {",
+							"     pm.expect(resp).to.have.all.keys('name','job','id');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"    pm.environment.set(\"Full Name\", pm.variables.replaceIn('{{$randomFullName}}'));",
+							"    pm.environment.set(\"Job Title\", pm.variables.replaceIn('{{$randomJobTitle}}'));",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{Full Name}}\",\n    \"job\": \"{{Job Title}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
